@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
-@SpringBootTest(classes = FilmorateApplication.class,webEnvironment = DEFINED_PORT)
+@SpringBootTest(classes = FilmorateApplication.class, webEnvironment = DEFINED_PORT)
 public class FilmControllerTests {
 
     @LocalServerPort
@@ -65,7 +65,8 @@ public class FilmControllerTests {
                 baseUrl,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Film>>() {}
+                new ParameterizedTypeReference<List<Film>>() {
+                }
         );
 
         // Проверяем код состояния HTTP

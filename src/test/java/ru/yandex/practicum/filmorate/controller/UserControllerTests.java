@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
-@SpringBootTest(classes = FilmorateApplication.class,webEnvironment = DEFINED_PORT)
+@SpringBootTest(classes = FilmorateApplication.class, webEnvironment = DEFINED_PORT)
 public class UserControllerTests {
 
     @LocalServerPort
