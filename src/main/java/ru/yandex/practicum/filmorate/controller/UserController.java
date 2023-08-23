@@ -1,7 +1,7 @@
-package controller;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import model.User;
+import ru.yandex.practicum.filmorate.model.User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

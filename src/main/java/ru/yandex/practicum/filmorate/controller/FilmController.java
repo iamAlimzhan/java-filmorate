@@ -1,7 +1,7 @@
-package controller;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import model.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

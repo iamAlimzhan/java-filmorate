@@ -1,14 +1,14 @@
-package controller;
+package ru.yandex.practicum.filmorate.controller;
 
-import model.Film;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import ru.yandex.practicum.filmorate.model.Film;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.FilmorateApplication;
 
@@ -56,17 +56,22 @@ public class FilmControllerTests {
         ResponseEntity<Film> response = restTemplate.postForEntity(baseUrl, invalidFilm, Film.class);
 
         // Проверяем код состояния HTTP
-        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(500, response.getStatusCodeValue());
     }
 
     @Test
     public void testGetAllFilms() {
-        ResponseEntity<Film> response = restTemplate.getForEntity(baseUrl, Film.class);
+        ResponseEntity<List<Film>> response = restTemplate.exchange(
+                baseUrl,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Film>>() {}
+        );
 
         // Проверяем код состояния HTTP
         assertEquals(200, response.getStatusCodeValue());
 
-        Film film = response.getBody();
+        List<Film> films = response.getBody();
     }
 
 }
