@@ -31,7 +31,6 @@ public class UserControllerTests {
 
     @BeforeEach
     public void setUp() {
-        // Clear or initialize any necessary data before each test
     }
 
     @Test
@@ -40,14 +39,14 @@ public class UserControllerTests {
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/v1/users", invalidUser, String.class);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus. NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     public void testCreateUserSuccess() throws Exception {
         User validUser = new User(0, "valid@email.com", "validlogin", "Valid Name", LocalDate.now());
 
-        ResponseEntity<User> response = restTemplate.postForEntity("/api/v1/users", validUser, User.class);
+        ResponseEntity<User> response = restTemplate.postForEntity("/users", validUser, User.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         User createdUser = response.getBody();

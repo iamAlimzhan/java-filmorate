@@ -1,68 +1,70 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.model.User;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.User;
 
-import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-@RestController
-@RequestMapping("/api/v1/users")
-@Validated
 @Slf4j
+@RestController
+@RequestMapping("/users")
 public class UserController {
-    private List<User> users = new ArrayList<>();
-    private int nextUserId = 1;
+
+    private Map<Integer, User> users = new ConcurrentHashMap<>();
+    private int id = 0;
+
+    @GetMapping
+    @ResponseBody
+    public List<User> getAllUsers() {
+        log.info("Количсетво пользователей: '{}'", users.size());
+        return new ArrayList<>(users.values());
+    }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) {
-        log.info("Создан новый пользователь: {}", user.getName());
-        if (!user.getEmail().contains("@")) {
-            throw new ValidationException("Неправильный формат электронной почты");
-        }
-        if (user.getLogin().contains(" ")) {
-            throw new ValidationException("Логин не может содержать пробелы");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        }
-        user.setId(nextUserId++);
-        users.add(user);
+    @ResponseBody
+    public User addUser(@RequestBody User user) throws ValidationException {
+        userValidate(user);
+        users.put(user.getId(), user);
+        log.info("id сохраненного пользователя '{}'", user.getId());
         return user;
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id, @Valid @RequestBody User updatedUser) {
-        log.info("Обновлен новый пользователь: {}", updatedUser.getName());
-        if (!updatedUser.getEmail().contains("@")) {
-            throw new ValidationException("Неправильный формат электронной почты");
+    @PutMapping
+    @ResponseBody
+    public User updateUser(@RequestBody User user) throws ValidationException {
+        userValidate(user);
+        if (users.containsKey(user.getId())) {
+            users.put(user.getId(), user);
+            log.info("id по которому находится пользователь '{}' обновлён", user.getId());
+        } else {
+            throw new ValidationException("С id " + user.getId() + " не существует пользователя");
         }
-        if (updatedUser.getLogin().contains(" ")) {
-            throw new ValidationException("Логин не может содержать пробелы");
-        }
-        if (updatedUser.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        }
-        for (User user : users) {
-            if (user.getId() == id) {
-                user.setEmail(updatedUser.getEmail());
-                user.setLogin(updatedUser.getLogin());
-                user.setName(updatedUser.getName());
-                user.setBirthday(updatedUser.getBirthday());
-                return user;
-            }
-        }
-        return null; // User не найден
+        return user;
     }
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        log.info("Получен новый пользователь: {}", users);
-        return users;
+
+    private void userValidate(User user) throws ValidationException {
+        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+            throw new ValidationException("Неверный email");
+        }
+        if (user.getLogin().isBlank()) {
+            throw new ValidationException("Неверный login");
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new ValidationException("Неверная дата");
+        }
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+        if (user.getId() <= 0) {
+            user.setId(++id);
+            log.info("Неверный идентификатор пользователя был задан как '{}'", user.getId());
+        }
     }
 }

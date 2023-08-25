@@ -31,7 +31,7 @@ public class FilmControllerTests {
 
     @BeforeEach
     void setUp() {
-        baseUrl = "http://localhost:" + port + "/api/v1/films";
+        baseUrl = "http://localhost:" + port + "/films";
     }
 
     @Test
