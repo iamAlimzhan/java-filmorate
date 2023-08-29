@@ -50,9 +50,6 @@ public class UserController {
 
 
     private void userValidate(User user) {
-        if (user == null) {
-            throw new ValidationException("Пользователь не может быть null");
-        }
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             throw new ValidationException("Неверный email");
         }
