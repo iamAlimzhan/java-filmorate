@@ -31,7 +31,7 @@ public class FilmController {
 
     @PostMapping
     @ResponseBody
-    public Film addFilm(@RequestBody Film film) throws ValidationException {
+    public Film addFilm(@RequestBody Film film) {
         filmValidate(film);
         films.put(film.getId(), film);
         log.info("Фильм '{}' сохранен с id '{}'", film.getName(), film.getId());
@@ -40,7 +40,7 @@ public class FilmController {
 
     @PutMapping
     @ResponseBody
-    public Film updateFilm(@RequestBody Film film) throws ValidationException {
+    public Film updateFilm(@RequestBody Film film) {
         filmValidate(film);
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
@@ -51,18 +51,20 @@ public class FilmController {
         return film;
     }
 
-    private void filmValidate(Film film) throws ValidationException {
-        if (film.getReleaseDate() == null ||
-                film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+    private void filmValidate(Film film) {
+        if (film == null) {
+            throw new ValidationException("Фильм не может быть null");
+        }
+        if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(MIN_DATE_OF_RELEASE)) {
             throw new ValidationException("Неверная дата релиза");
         }
-        if (film.getName().isEmpty() || film.getName().isBlank()) {
+        if (film.getName() == null || film.getName().isEmpty()) {
             throw new ValidationException("Название фильма не должно быть пустым");
         }
         if (film.getDuration() <= 0) {
             throw new ValidationException("Продолжительность фильма не может ыть меньше 0");
         }
-        if (film.getDescription().length() > 200 || film.getDescription().length() == 0) {
+        if (film.getDescription() == null || film.getDescription().length() > MAX_DESCRIPTION_LENGTH || film.getDescription().isEmpty()) {
             throw new ValidationException("В описании неверное количество символов");
         }
         if (film.getId() <= 0) {
