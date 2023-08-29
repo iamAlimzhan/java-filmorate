@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
-    public User addUser(@RequestBody User user) throws ValidationException {
+    public User addUser(@RequestBody User user) {
         userValidate(user);
         users.put(user.getId(), user);
         log.info("id сохраненного пользователя '{}'", user.getId());
@@ -37,7 +37,7 @@ public class UserController {
 
     @PutMapping
     @ResponseBody
-    public User updateUser(@RequestBody User user) throws ValidationException {
+    public User updateUser(@RequestBody User user) {
         userValidate(user);
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
@@ -49,14 +49,17 @@ public class UserController {
     }
 
 
-    private void userValidate(User user) throws ValidationException {
-        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+    private void userValidate(User user) {
+        if (user == null) {
+            throw new ValidationException("Пользователь не может быть null");
+        }
+        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             throw new ValidationException("Неверный email");
         }
-        if (user.getLogin().isBlank()) {
+        if (user.getLogin() == null || user.getLogin().isBlank()) {
             throw new ValidationException("Неверный login");
         }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
+        if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Неверная дата");
         }
         if (user.getName() == null || user.getName().isBlank()) {
