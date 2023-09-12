@@ -37,7 +37,7 @@ public class UserService {
     }
 
     //обновление пользователя
-    public User updateUser(User user) throws ValidationException{
+    public User updateUser(User user) throws ValidationException {
         userValidate(user);
         return userStorage.updateUser(user);
     }
@@ -46,7 +46,7 @@ public class UserService {
     public void addToFriend(Integer id, Integer friendId) {
         User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
-        if(friendId == null || id == null){
+        if (friendId == null || id == null) {
             throw new UserNotFoundException("Этого пользователя не существует");
         }
         user.getFriends().add(friendId);
@@ -55,7 +55,7 @@ public class UserService {
 
     // удаление друга
     public void deleteFriend(Integer id, Integer friendId) {
-        User user =userStorage.getById(id);
+        User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
         if (user == null || friend == null) {
             throw new UserNotFoundException("Этого пользователя не существует");

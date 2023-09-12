@@ -23,6 +23,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         films = new ConcurrentHashMap<>();
         id = 0;
     }
+
     private void setId(Film film) {
         if (film.getId() <= 0) {
             film.setId(++id);

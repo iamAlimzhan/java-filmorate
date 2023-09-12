@@ -17,6 +17,7 @@ public class Film {
     private LocalDate releaseDate;
     private int duration;
     private Set<Integer> filmLikes;
+
     public void putLike(Integer userId) {
         filmLikes.add(userId);
     }

@@ -36,6 +36,7 @@ public class FilmService {
         filmValidate(film);
         return filmStorage.addFilm(film);
     }
+
     //обновление фильма
     public Film updateFilm(Film film) throws ValidationException {
         filmValidate(film);

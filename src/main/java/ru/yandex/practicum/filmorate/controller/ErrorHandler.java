@@ -12,19 +12,19 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleRunTimeException(final RuntimeException exp){
+    public ErrorResponse handleRunTimeException(final RuntimeException exp) {
         return new ErrorResponse("Error");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final ValidationException exp){
+    public ErrorResponse handleValidationException(final ValidationException exp) {
         return new ErrorResponse("Validation error");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(final NotFoundException exp){
+    public ErrorResponse handleNotFoundException(final NotFoundException exp) {
         return new ErrorResponse("Object not found error");
     }
 }

@@ -42,7 +42,7 @@ public class FilmController {
 
     @PostMapping
     @ResponseBody
-    public Film addFilm(@RequestBody Film film) throws ValidationException{
+    public Film addFilm(@RequestBody Film film) throws ValidationException {
         return filmService.addFilm(film);
     }
 
