@@ -15,6 +15,7 @@ public class User {
     private String name;
     private LocalDate birthday;
     private Set<Integer> friends;
+
     public int getFriendsQuantity() {
         return friends.size();
     }
