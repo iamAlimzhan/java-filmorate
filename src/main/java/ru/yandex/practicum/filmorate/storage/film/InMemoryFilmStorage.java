@@ -57,6 +57,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
+    // получение фильма по id
     @Override
     public Film getFilmById(int id) {
         if (!films.containsKey(id)) {
