@@ -23,4 +23,7 @@ public class Film {
     public void deleteLike(Integer userId) {
         filmLikes.remove(userId);
     }
+    public int getLikesQuantity() {
+        return filmLikes.size();
+    }
 }
