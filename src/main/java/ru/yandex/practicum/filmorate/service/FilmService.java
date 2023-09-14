@@ -15,8 +15,8 @@ import java.util.List;
 public class FilmService {
     private final UserService userService;
     private final FilmStorage filmStorage;
-    public static final LocalDate MIN_DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
-    public static final int MAX_DESCRIPTION_LENGTH = 200;
+    private static final LocalDate MIN_DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
+    private static final int MAX_DESCRIPTION_LENGTH = 200;
 
     // получение фиьма по id
     public Film getFilmById(int id) {
@@ -61,17 +61,17 @@ public class FilmService {
 
     private void filmValidate(Film film) {
         if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(MIN_DATE_OF_RELEASE)) {
-            throw new javax.validation.ValidationException("Неверная дата релиза");
+            throw new ValidationException("Неверная дата релиза");
         }
         if (film.getName() == null || film.getName().isBlank()) {
-            throw new javax.validation.ValidationException("Название фильма не должно быть пустым");
+            throw new ValidationException("Название фильма не должно быть пустым");
         }
         if (film.getDuration() <= 0) {
-            throw new javax.validation.ValidationException("Продолжительность фильма не может быть меньше 0");
+            throw new ValidationException("Продолжительность фильма не может быть меньше 0");
         }
         if (film.getDescription() == null || film.getDescription().length() > MAX_DESCRIPTION_LENGTH
                 || film.getDescription().isEmpty()) {
-            throw new javax.validation.ValidationException("В описании неверное количество символов");
+            throw new ValidationException("В описании неверное количество символов");
         }
         if (film.getFilmLikes() == null) {
             film.setFilmLikes(new HashSet<>());

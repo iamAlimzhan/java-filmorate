@@ -116,13 +116,13 @@ public class UserService {
 
     private void userValidate(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            throw new javax.validation.ValidationException("Неверный email");
+            throw new ValidationException("Неверный email");
         }
         if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            throw new javax.validation.ValidationException("Неверный login");
+            throw new ValidationException("Неверный login");
         }
         if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
-            throw new javax.validation.ValidationException("Неверная дата");
+            throw new ValidationException("Неверная дата");
         }
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
