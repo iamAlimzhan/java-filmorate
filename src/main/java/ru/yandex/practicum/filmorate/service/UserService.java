@@ -3,16 +3,13 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +19,8 @@ public class UserService {
 
     //получение пользователя по id
     public User getUserById(int id) {
-        return userStorage.getById(id);
+        Optional<User> userOptional = Optional.ofNullable(userStorage.getById(id));
+        return userOptional.orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
     }
 
     // получение пользователей
@@ -31,13 +29,13 @@ public class UserService {
     }
 
     //добавление пользователя
-    public User addUser(User user) throws ValidationException {
+    public User addUser(User user) {
         userValidate(user);
         return userStorage.addUser(user);
     }
 
     //обновление пользователя
-    public User updateUser(User user) throws ValidationException {
+    public User updateUser(User user) {
         userValidate(user);
         return userStorage.updateUser(user);
     }
@@ -47,7 +45,7 @@ public class UserService {
         User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
         if (friendId == null || id == null) {
-            throw new UserNotFoundException("Этого пользователя не существует");
+            throw new NotFoundException("Этого пользователя не существует");
         }
         user.getFriends().add(friendId);
         friend.getFriends().add(id);
@@ -58,7 +56,7 @@ public class UserService {
         User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
         if (user == null || friend == null) {
-            throw new UserNotFoundException("Этого пользователя не существует");
+            throw new NotFoundException("Этого пользователя не существует");
         }
         user.getFriends().remove(friendId);
         friend.getFriends().remove(id);
@@ -70,7 +68,7 @@ public class UserService {
         User mutualFriends = userStorage.getById(mutualId);
 
         if (user == null || mutualFriends == null) {
-            throw new UserNotFoundException("Этого пользователя не существует");
+            throw new NotFoundException("Этого пользователя не существует");
         }
 
         Set<Integer> userFriends = user.getFriends();
@@ -94,12 +92,12 @@ public class UserService {
     public List<User> getListOfFriends(int id) {
         User user = userStorage.getById(id);
         if (user == null) {
-            throw new UserNotFoundException("Этого пользователя не существует");
+            throw new NotFoundException("Этого пользователя не существует");
         }
 
         Set<Integer> friendsList = user.getFriends();
         if (friendsList.isEmpty()) {
-            throw new UserNotFoundException("Список пустой");
+            throw new NotFoundException("Список пустой");
         }
 
         List<User> friendObjects = new ArrayList<>();
