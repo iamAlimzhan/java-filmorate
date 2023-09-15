@@ -6,16 +6,16 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class FilmService {
-    private final UserService userService;
+    private final UserStorage userStorage;
     private final FilmStorage filmStorage;
     private static final LocalDate MIN_DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
     private static final int MAX_DESCRIPTION_LENGTH = 200;
@@ -46,14 +46,14 @@ public class FilmService {
     // добавление Лайка к фильму
     public void addLikeForFilm(Integer id, Integer userId) {
         Film film = filmStorage.getFilmById(id);
-        userService.getUserById(userId);
+        userStorage.getById(userId);
         film.putLike(userId);
     }
 
     // удаление Лайка к фильму
     public void deleteLikeForFilm(Integer id, Integer userId) {
         Film film = filmStorage.getFilmById(id);
-        userService.getUserById(userId);
+        userStorage.getById(userId);
         film.deleteLike(userId);
     }
 
@@ -75,9 +75,6 @@ public class FilmService {
         if (film.getDescription() == null || film.getDescription().length() > MAX_DESCRIPTION_LENGTH
                 || film.getDescription().isEmpty()) {
             throw new ValidationException("В описании неверное количество символов");
-        }
-        if (film.getFilmLikes() == null) {
-            film.setFilmLikes(new HashSet<>());
         }
     }
 }

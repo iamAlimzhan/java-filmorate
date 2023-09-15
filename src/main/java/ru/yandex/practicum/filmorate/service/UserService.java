@@ -9,7 +9,10 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -124,9 +127,6 @@ public class UserService {
         }
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        }
-        if (user.getFriends() == null) {
-            user.setFriends(new HashSet<>());
         }
     }
 }

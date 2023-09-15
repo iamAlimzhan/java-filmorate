@@ -13,8 +13,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
+    private final FilmService filmService;
+
     @Autowired
-    FilmService filmService;
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @GetMapping
     @ResponseBody
