@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -22,8 +21,11 @@ public class UserService {
 
     //получение пользователя по id
     public User getUserById(int id) {
-        Optional<User> userOptional = Optional.ofNullable(userStorage.getById(id));
-        return userOptional.orElseThrow(() -> new NotFoundException("Пользователь с id " + id + " не найден"));
+        User user = userStorage.getById(id);
+        if (user == null) {
+            throw new NotFoundException("Пользователь с id " + id + " не найден");
+        }
+        return user;
     }
 
     // получение пользователей
@@ -47,9 +49,6 @@ public class UserService {
     public void addToFriend(Integer id, Integer friendId) {
         User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
-        if (friendId == null || id == null) {
-            throw new NotFoundException("Этого пользователя не существует");
-        }
         user.getFriends().add(friendId);
         friend.getFriends().add(id);
     }
@@ -58,9 +57,6 @@ public class UserService {
     public void deleteFriend(Integer id, Integer friendId) {
         User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
-        if (user == null || friend == null) {
-            throw new NotFoundException("Этого пользователя не существует");
-        }
         user.getFriends().remove(friendId);
         friend.getFriends().remove(id);
     }
@@ -69,10 +65,6 @@ public class UserService {
     public List<User> getListOfMutualFriends(Integer id, Integer mutualId) {
         User user = userStorage.getById(id);
         User mutualFriends = userStorage.getById(mutualId);
-
-        if (user == null || mutualFriends == null) {
-            throw new NotFoundException("Этого пользователя не существует");
-        }
 
         Set<Integer> userFriends = user.getFriends();
         Set<Integer> mutualFriendsList = mutualFriends.getFriends();
@@ -94,9 +86,7 @@ public class UserService {
 
     public List<User> getListOfFriends(int id) {
         User user = userStorage.getById(id);
-        if (user == null) {
-            throw new NotFoundException("Этого пользователя не существует");
-        }
+
 
         Set<Integer> friendsList = user.getFriends();
         if (friendsList.isEmpty()) {

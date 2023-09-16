@@ -22,8 +22,11 @@ public class FilmService {
 
     // получение фиьма по id
     public Film getFilmById(int id) {
-        Optional<Film> filmOptional = Optional.ofNullable(filmStorage.getFilmById(id));
-        return filmOptional.orElseThrow(() -> new NotFoundException("Фильм с id " + id + " не найден"));
+        Film film = filmStorage.getFilmById(id);
+        if (film == null) {
+            throw new NotFoundException("Фильм с id " + id + " не найден");
+        }
+        return film;
     }
 
     //получение фильмов
@@ -32,13 +35,13 @@ public class FilmService {
     }
 
     // добавление фильма
-    public Film addFilm(Film film) throws ValidationException {
+    public Film addFilm(Film film) {
         filmValidate(film);
         return filmStorage.addFilm(film);
     }
 
     //обновление фильма
-    public Film updateFilm(Film film) throws ValidationException {
+    public Film updateFilm(Film film) {
         filmValidate(film);
         return filmStorage.updateFilm(film);
     }

@@ -17,7 +17,7 @@ public class User {
     private String name;
     private LocalDate birthday;
     @JsonIgnore
-    private Set<Integer> friends = new HashSet<>();
+    private Set<Integer> friends;
 
     public int getFriendsQuantity() {
         return friends.size();

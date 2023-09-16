@@ -39,12 +39,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.info("Самые популярные фильмы");
         return getAllFilms()
                 .stream()
-                .sorted(new Comparator<Film>() {
-                    @Override
-                    public int compare(Film film1, Film film2) {
-                        return Integer.compare(film2.getFilmLikes().size(), film1.getFilmLikes().size());
-                    }
-                })
+                .sorted(Comparator.comparingInt(Film::getLikesQuantity).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
     }
