@@ -1,18 +1,19 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import ru.yandex.practicum.filmorate.model.Film;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.FilmorateApplication;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,7 +38,7 @@ public class FilmControllerTests {
     @Test
     public void testAddValidFilm() {
         Film newFilm = new Film(1, "Film", "Description", LocalDate.of(2022, 5,
-                10), 90);
+                10), 90, Collections.singleton(50));
 
         ResponseEntity<Film> response = restTemplate.postForEntity(baseUrl, newFilm, Film.class);
 
@@ -51,7 +52,7 @@ public class FilmControllerTests {
     @Test
     public void testAddInvalidFilm() {
         Film invalidFilm = new Film(0, "Invalid Film", "Description", LocalDate.of(1800,
-                1, 1), -10);
+                1, 1), -10, Collections.singleton(0));
 
         ResponseEntity<Film> response = restTemplate.postForEntity(baseUrl, invalidFilm, Film.class);
 

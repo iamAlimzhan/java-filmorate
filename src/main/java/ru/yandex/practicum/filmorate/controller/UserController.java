@@ -3,68 +3,62 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
-import javax.validation.ValidationException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private final UserService userService;
 
-    private Map<Integer, User> users = new ConcurrentHashMap<>();
-    private int id = 0;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
-    @ResponseBody
     public List<User> getAllUsers() {
-        log.info("Количсетво пользователей: '{}'", users.size());
-        return new ArrayList<>(users.values());
+        return userService.getUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        log.info("Получение пользователя по id: {}", id);
+        return userService.getUserById(id);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriends(@PathVariable Integer id) {
+        log.info("Получение друзей пользователя id: {}", id);
+        return userService.getListOfFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getMutualFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+        log.info("Получение общих друзей id: {}, otherId: {}", id, otherId);
+        return userService.getListOfMutualFriends(id, otherId);
     }
 
     @PostMapping
-    @ResponseBody
     public User addUser(@RequestBody User user) {
-        userValidate(user);
-        users.put(user.getId(), user);
-        log.info("id сохраненного пользователя '{}'", user.getId());
-        return user;
+        return userService.addUser(user);
     }
 
     @PutMapping
-    @ResponseBody
     public User updateUser(@RequestBody User user) {
-        userValidate(user);
-        if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-            log.info("id по которому находится пользователь '{}' обновлён", user.getId());
-        } else {
-            throw new ValidationException("С id " + user.getId() + " не существует пользователя");
-        }
-        return user;
+        return userService.updateUser(user);
     }
 
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriendById(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Добавление друга friendId:{} в дузья пользователя id: {}", friendId, id);
+        userService.addToFriend(id, friendId);
+    }
 
-    private void userValidate(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            throw new ValidationException("Неверный email");
-        }
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            throw new ValidationException("Неверный login");
-        }
-        if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Неверная дата");
-        }
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getId() <= 0) {
-            user.setId(++id);
-            log.info("Неверный идентификатор пользователя был задан как '{}'", user.getId());
-        }
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Удаление друга friendId: {} из друзей пользователя id: {}", friendId, id);
+        userService.deleteFriend(id, friendId);
     }
 }
