@@ -2,7 +2,8 @@
 
 dbdiagram.io: https://dbdiagram.io/d/6511bbc2ffbf5169f0765bf6
 
-![ER-diagram.png](..%2F..%2F..%2FDownloads%2FER-diagram.png)
+![ER-diagram](https://github.com/iamAlimzhan/java-filmorate/assets/120095829/084cc86a-647b-4a38-8976-c76bec17573c)
+
 
 ***Эта диаграмма описывает структуру базы данных, которая может использоваться в приложении для хранения информации
 о фильмах, жанрах, пользователях и их действиях, таких как лайки и дружбы.***
