@@ -22,9 +22,6 @@ public class FilmService {
     // получение фиьма по id
     public Film getFilmById(int id) {
         Film film = filmStorage.getFilmById(id);
-        if (film == null) {
-            throw new NotFoundException("Фильм с id " + id + " не найден");
-        }
         return film;
     }
 

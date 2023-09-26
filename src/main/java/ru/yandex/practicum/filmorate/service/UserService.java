@@ -22,9 +22,6 @@ public class UserService {
     //получение пользователя по id
     public User getUserById(int id) {
         User user = userStorage.getById(id);
-        if (user == null) {
-            throw new NotFoundException("Пользователь с id " + id + " не найден");
-        }
         return user;
     }
 
