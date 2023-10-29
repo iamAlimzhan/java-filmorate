@@ -2,7 +2,7 @@
 
 dbdiagram.io: https://dbdiagram.io/d/6511bbc2ffbf5169f0765bf6
 
-![ER-diagram](https://github.com/iamAlimzhan/java-filmorate/assets/120095829/084cc86a-647b-4a38-8976-c76bec17573c)
+![ER diagram](https://github.com/iamAlimzhan/java-filmorate/assets/120095829/4f0dbb52-318b-4594-975c-49e478bd387a)
 
 
 ***Эта диаграмма описывает структуру базы данных, которая может использоваться в приложении для хранения информации
