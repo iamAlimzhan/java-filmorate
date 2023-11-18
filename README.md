@@ -2,7 +2,8 @@
 
 dbdiagram.io: https://dbdiagram.io/d/6511bbc2ffbf5169f0765bf6
 
-![Diagram](https://github.com/iamAlimzhan/java-filmorate/assets/120095829/7791405e-755d-4e00-9880-da4f6b0623c3)
+![Untitled (1)](https://github.com/iamAlimzhan/java-filmorate/assets/120095829/d81fc5f2-e412-4536-bf1a-e19d6c3b6230)
+
 
 
 
