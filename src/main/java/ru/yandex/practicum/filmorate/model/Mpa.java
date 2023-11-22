@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+<<<<<<< HEAD
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,4 +14,12 @@ public class Mpa {
     @NotNull
     private String name;
 
+=======
+public enum Mpa {
+    G,
+    PG,
+    PG13,
+    R,
+    NC17
+>>>>>>> 456a10b75a6fb34452ab54527af13ff869610b08
 }
