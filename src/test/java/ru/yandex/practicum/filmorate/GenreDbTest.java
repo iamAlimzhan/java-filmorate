@@ -26,7 +26,7 @@ public class GenreDbTest {
     void getAll() {
         List<Genre> genres = genreDbStorage.getGenreList();
 
-        assertEquals(6, genres.size(), "список не подходит");
+        assertEquals(6, genres.size(), "список не подходит(");
     }
 
     @Test
