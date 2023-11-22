@@ -27,7 +27,7 @@ public class MpaDbTest {
     void getAll() {
         List<Mpa> allMpa = mpaDbStorage.getMpaList();
 
-        assertEquals(5, allMpa.size(), "список mpa не подходит");
+        assertEquals(5, allMpa.size(), "список mpa не подходит(");
     }
 
     @Test
