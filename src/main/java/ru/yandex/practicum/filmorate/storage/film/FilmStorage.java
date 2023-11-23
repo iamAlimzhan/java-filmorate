@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
 
@@ -9,11 +10,9 @@ public interface FilmStorage {
 
     Film updateFilm(Film film);
 
-    void deleteAllFilms();
-
     List<Film> getAllFilms();
 
-    List<Film> getPopularFilms(Integer quantity);
-
     Film getFilmById(int id);
+
+    List<Genre> getGenreByFilmId(int filmId);
 }
