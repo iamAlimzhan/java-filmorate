@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.mapper.MapperUser;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class UserDbTest {
     public void testFindUserById() {
         User newUser = User.createUser(1, "user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
-        UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
+        UserDbStorage userStorage = new UserDbStorage(jdbcTemplate, new MapperUser());
         userStorage.addUser(newUser);
 
         User savedUser = userStorage.getById(1);

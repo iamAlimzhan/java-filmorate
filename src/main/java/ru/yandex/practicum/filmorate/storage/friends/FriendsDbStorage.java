@@ -19,6 +19,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class FriendsDbStorage implements DaoFriends {
     private final JdbcTemplate jdbcTemplate;
+    private final MapperUser mapperUser;
 
     @Override
     public List<User> getFriendsList(int userId) {
@@ -26,7 +27,7 @@ public class FriendsDbStorage implements DaoFriends {
         try {
             log.info("Список друзей пользователя {}", userId);
             return jdbcTemplate.query("SELECT * FROM users WHERE user_id IN (SELECT friend_id FROM friends " +
-                    "WHERE user_id = ?)", new MapperUser(), userId);
+                    "WHERE user_id = ?)", mapperUser, userId);
         } catch (EmptyResultDataAccessException e) {
             throw new NullPointerException(format("Пользователя с id= %s нет в базе", userId));
         }
@@ -40,7 +41,7 @@ public class FriendsDbStorage implements DaoFriends {
                 "JOIN friends f1 ON u.user_id = f1.friend_id " +
                 "JOIN friends f2 ON f1.friend_id = f2.friend_id " +
                 "WHERE f1.user_id = ? " +
-                "AND f2.user_id = ?", new MapperUser(), userId, friendId);
+                "AND f2.user_id = ?", mapperUser, userId, friendId);
     }
 
     @Override

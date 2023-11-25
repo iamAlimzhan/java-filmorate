@@ -27,12 +27,12 @@ import static java.util.function.UnaryOperator.identity;
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final MapperFilm mapperFilm;
 
     @Override
     public Film addFilm(Film film) {
         log.info("Добавление фильма {}", film);
         String sql = "INSERT INTO film (name, description, release_date, duration, mpa_id) VALUES(?, ?, ?, ?, ?)";
-        String genreInsertSql = "INSERT INTO filmGenres (film_id, genre_id) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -44,11 +44,7 @@ public class FilmDbStorage implements FilmStorage {
             return ps;
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
-        List<Object[]> batchArgs = new ArrayList<>();
-        for (Genre genre : film.getGenres()) {
-            batchArgs.add(new Object[]{film.getId(), genre.getId()});
-        }
-        jdbcTemplate.batchUpdate(genreInsertSql, batchArgs);
+        addGenres(film);
         log.info("Фильм {} сохранен", film.getName());
         return film;
     }
@@ -62,11 +58,8 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDuration(), film.getMpa().getId(), film.getId());
         if (amountOperations > 0) {
             deleteAllGenresFromFilm(film.getId());
-            String insertSql = "INSERT INTO filmGenres (film_id, genre_id) VALUES (?, ?)";
             Set<Genre> genres = film.getGenres();
-            List<Object[]> batchArgs = new ArrayList<>();
-            genres.forEach(genre -> batchArgs.add(new Object[]{film.getId(), genre.getId()}));
-            jdbcTemplate.batchUpdate(insertSql, batchArgs);
+            addGenres(film);
             genres.clear();
             genres.addAll(getGenreByFilmId(film.getId()));
             return film;
@@ -79,7 +72,7 @@ public class FilmDbStorage implements FilmStorage {
     public List<Film> getAllFilms() {
         log.info("Получение списка всех фильмов");
         String sql = "SELECT f.*, m.mpa FROM film AS f JOIN mpa AS m ON f.mpa_id = m.mpa_id";
-        List<Film> films = jdbcTemplate.query(sql, new MapperFilm());
+        List<Film> films = jdbcTemplate.query(sql, mapperFilm);
         final Map<Integer, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, identity()));
         String inSql = String.join(",", Collections.nCopies(films.size(), "?"));
         final String sqlQuery = "SELECT * from genre g, filmGenres fg where fg.genre_id = g.genre_id AND fg.film_id in " +
@@ -107,7 +100,7 @@ public class FilmDbStorage implements FilmStorage {
         log.info("Получение фильма по id {}", id);
         String sql = "SELECT f.*, m.mpa FROM film AS f JOIN mpa AS m ON f.mpa_id = m.mpa_id WHERE f.film_id = ?";
         try {
-            Film film = jdbcTemplate.queryForObject(sql, new MapperFilm(), id);
+            Film film = jdbcTemplate.queryForObject(sql, mapperFilm, id);
             List<Genre> genres = getGenreByFilmId(id);
             genres.forEach(genre -> film.getGenres().add(genre));
             return film;
@@ -143,5 +136,14 @@ public class FilmDbStorage implements FilmStorage {
                 .id(rs.getInt("genre_id"))
                 .name(rs.getString("genre"))
                 .build();
+    }
+
+    private void addGenres(Film film) {
+        String genreInsertSql = "INSERT INTO filmGenres (film_id, genre_id) VALUES (?, ?)";
+        List<Object[]> batchArgs = new ArrayList<>();
+        for (Genre genre : film.getGenres()) {
+            batchArgs.add(new Object[]{film.getId(), genre.getId()});
+        }
+        jdbcTemplate.batchUpdate(genreInsertSql, batchArgs);
     }
 }

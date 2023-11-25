@@ -24,6 +24,7 @@ import static java.lang.String.format;
 @Component
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final MapperUser mapperUser;
 
     @Override
     public User addUser(User user) {
@@ -58,7 +59,7 @@ public class UserDbStorage implements UserStorage {
     public User getById(int id) {
         log.info("Получение юзера по id: {}", id);
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id = ?", new MapperUser(), id);
+            return jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id = ?", mapperUser, id);
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(format("Нет пользователя в бд с id = %s", id));
         }

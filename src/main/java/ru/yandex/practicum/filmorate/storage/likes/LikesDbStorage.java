@@ -19,6 +19,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class LikesDbStorage implements DaoLikes {
     private final JdbcTemplate jdbcTemplate;
+    private final MapperFilm mapperFilm;
 
     @Override
     public List<Integer> getFilmLikes(int filmId) {
@@ -38,7 +39,7 @@ public class LikesDbStorage implements DaoLikes {
         return jdbcTemplate.query("SELECT f.*, m.mpa AS mpa_name FROM film AS f JOIN mpa AS m ON f.mpa_id = m.mpa_id" +
                         " LEFT JOIN (SELECT film_id, COUNT(user_id) AS likes_count FROM likes GROUP BY film_id ORDER BY " +
                         "likes_count) AS popular on f.film_id = popular.film_id ORDER BY popular.likes_count DESC LIMIT ?",
-                new MapperFilm(), count);
+                mapperFilm, count);
     }
 
     @Override
