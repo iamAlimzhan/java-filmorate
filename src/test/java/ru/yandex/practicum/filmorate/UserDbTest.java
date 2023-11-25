@@ -12,25 +12,24 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@JdbcTest // указываем, о необходимости подготовить бины для работы с БД
+@JdbcTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserDbTest {
     private final JdbcTemplate jdbcTemplate;
+
     @Test
     public void testFindUserById() {
-        // Подготавливаем данные для теста
-        User newUser =  User.createUser(1, "user@email.ru", "vanya123", "Ivan Petrov",
+        User newUser = User.createUser(1, "user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         userStorage.addUser(newUser);
 
-        // вызываем тестируемый метод
         User savedUser = userStorage.getById(1);
 
         // проверяем утверждения
         assertThat(savedUser)
-                .isNotNull() // проверяем, что объект не равен null
-                .usingRecursiveComparison() // проверяем, что значения полей нового
-                .isEqualTo(newUser);        // и сохраненного пользователя - совпадают
+                .isNotNull()
+                .usingRecursiveComparison()
+                .isEqualTo(newUser);
     }
 }
