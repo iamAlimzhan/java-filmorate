@@ -24,15 +24,15 @@ public class FilmService {
 
 
     public List<Film> getAllFilms() {
-        log.info("Лист фильмов {}", filmStorage.getAllFilms().size());
-        return filmStorage.getAllFilms();
+        List<Film> allFilms = filmStorage.getAllFilms();
+        log.info("Лист фильмов {}", allFilms.size());
+        return allFilms;
     }
 
     public Film getFilmById(int filmId) {
         Film film;
         film = filmStorage.getFilmById(filmId);
         film.getGenres().addAll(filmStorage.getGenreByFilmId(filmId));
-        film.getFilmLikes().addAll(likesDbStorage.getFilmLikes(filmId));
         log.info("Получен фильм по id {}", filmId);
         return film;
     }

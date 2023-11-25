@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Data
 @Builder
@@ -15,5 +13,14 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-    private final Set<Integer> friends = new TreeSet<>();
+
+    public static User createUser(int id, String email, String login, String name, LocalDate birthday) {
+        return User.builder()
+                .id(id)
+                .email(email)
+                .login(login)
+                .name(name)
+                .birthday(birthday)
+                .build();
+    }
 }

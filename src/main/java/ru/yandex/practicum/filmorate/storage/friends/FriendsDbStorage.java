@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.mapper.MapperUser;
 
 import javax.validation.ValidationException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -35,16 +34,13 @@ public class FriendsDbStorage implements DaoFriends {
 
     @Override
     public List<User> getMutualFriends(int userId, int friendId) {
-        List<User> usersFriends = getFriendsList(userId);
-        List<User> mutualFriends = new ArrayList<>();
-        List<User> friendOfFriends = getFriendsList(friendId);
-        for (User user : usersFriends) {
-            if (friendOfFriends.contains(user)) {
-                mutualFriends.add(user);
-            }
-        }
-        log.info("Списко общих друзей {} {}", userId, friendId);
-        return mutualFriends;
+        log.debug("Получение общих друзей по id {}, {}", userId, friendId);
+        return jdbcTemplate.query("SELECT u.user_id, u.email, u.name, u.login, u.birthday " +
+                "FROM users u " +
+                "JOIN friends f1 ON u.user_id = f1.friend_id " +
+                "JOIN friends f2 ON f1.friend_id = f2.friend_id " +
+                "WHERE f1.user_id = ? " +
+                "AND f2.user_id = ?", new MapperUser(), userId, friendId);
     }
 
     @Override

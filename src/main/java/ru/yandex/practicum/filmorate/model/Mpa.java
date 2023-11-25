@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 @Builder
 @Data
 public class Mpa {
-    @NotNull
     private int id;
     @NotNull
     private String name;

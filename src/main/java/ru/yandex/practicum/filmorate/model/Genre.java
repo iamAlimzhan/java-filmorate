@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 @Builder
 @Data
 public class Genre {
-    @NotNull
     private int id;
     @NotNull
     private String name;

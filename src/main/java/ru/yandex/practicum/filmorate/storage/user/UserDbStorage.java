@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.mapper.MapperUser;
 
@@ -49,7 +49,7 @@ public class UserDbStorage implements UserStorage {
             jdbcTemplate.update("UPDATE users SET email=?, login=?, name=?, birthday=? WHERE user_id=?",
                     user.getEmail(), user.getLogin(), user.getName(), Date.valueOf(user.getBirthday()), user.getId());
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(format("Нет пользователя в бд с id = %s", user.getId()));
+            throw new ObjectNotFoundException(format("Нет пользователя в бд с id = %s", user.getId()));
         }
         return user;
     }
@@ -60,7 +60,7 @@ public class UserDbStorage implements UserStorage {
         try {
             return jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id = ?", new MapperUser(), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(format("Нет пользователя в бд с id = %s", id));
+            throw new ObjectNotFoundException(format("Нет пользователя в бд с id = %s", id));
         }
     }
 

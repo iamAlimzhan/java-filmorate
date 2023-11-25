@@ -19,14 +19,8 @@ public class Film {
     @NotNull
     private Mpa mpa;
     private final Set<Genre> genres = new HashSet<>();
-    private final Set<Integer> filmLikes = new HashSet<>();
 
-    public void createGenre(Genre genre) {
-        genres.add(genre);
+    public void createGenre(Set<Genre> genres) {
+        this.genres.addAll(genres);
     }
-
-    public void putLike(int userId) {
-        filmLikes.add(userId);
-    }
-
 }
